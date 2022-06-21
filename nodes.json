@@ -1,0 +1,29 @@
+{
+    "number_of_nodes": 3,
+    "min_xy":-5,
+    "max_xy": 10,
+    
+    "nodes": [
+        {   
+            "node_id": 1,
+            "x":0 ,
+            "y":0 ,
+            "radius": 3 
+        },
+        {   
+            "node_id": 2,
+            "x":3 ,
+            "y":1 ,
+            "radius": 2 
+        },
+        {   
+            "node_id": 3,
+            "x":2 ,
+            "y":2 ,
+            "radius": 1 
+        }
+
+
+    ]
+
+}
