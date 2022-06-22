@@ -17,7 +17,6 @@ class Network:
         self.host = host
 
     def get_next_jump(self, hosts):
-
         for idx, host in enumerate(hosts):
             if host.node.id == self.host.node.id:
                 return hosts[idx + 1]
@@ -37,7 +36,7 @@ class Network:
             )
 
             log(
-                f"NETWORK: Create packge DATA from Host[{self.host.node.id}] To Destiny Host[{destination}]"
+                f"     Rede: cria pacote DATA a partir do Hospedeiro[{self.host.node.id}] para o Hospedeiro destinatário[{destination}]"
             )
             self.package_id.add()
 
@@ -45,26 +44,26 @@ class Network:
 
             for host in self.host.neighbours:
                 if destination == host.node.id:
-                    log(f"NETWORK: Host[{destination}] is neighbor")
+                    log(f"     Rede: Hospedeiro[{destination}] é meu vizinho")
                     self.host.link.sending_request(package)
                     return
 
             if self.host.check_destiny(destination):
                 hosts = self.host.routes[destination]
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] can reach the destiny"
+                    f"     Rede: Hospedeiro[{self.host.node.id}] pode chegar ao destino"
                 )
                 package.path = hosts
                 package.next = self.get_next_jump(hosts)
                 log(
-                    f"NETWORK: Sending DATA to the next Host[{package.next.node.id}]"
+                    f"     Rede: Estou enviando DATA para o próximo do Hospedeiro[{package.next.node.id}]"
                 )
 
                 self.host.link.sending_request(package)
 
             else:
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] Don't have route to Host[{destination}]"
+                    f"     Rede: Hospedeiro[{self.host.node.id}] não tem rotas para Hospedeiro[{destination}]"
                 )
                 self.pending_packages.append(package)
 
@@ -79,17 +78,17 @@ class Network:
 
                 self.received_package.append(package_RREQ.id)
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] creating RREQ to Host[{destination}]"
+                    f"     Rede: Hospedeiro[{self.host.node.id}] está criando um pacote RREQ para o Hospedeiro[{destination}]"
                 )
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] adding path"
+                    f"     Rede: Hospedeiro[{self.host.node.id}] está se adicionando ao path"
                 )
 
                 package_RREQ.path.append(self.host)
                 self.host.link.sending_request(package_RREQ)
 
     def receive_package(self, package: Package):
-        log(f" NETWORK: Receive |{package.type}| by the enlance.")
+        log(f"     Rede: recebe pacote |{package.type}| por camada de enlace.")
         if package.type == "DATA":
             self.receive_data_package(package)
         elif package.type == "RREQ":
@@ -102,18 +101,18 @@ class Network:
         if package.destiny == self.host.node.id:
             if self.add_received_package(package.id):
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] receive a package from Host[{package.origin}]\n"
-                    + f" message is: {package.content}."
+                    f"     Rede: Hospedeiro[{self.host.node.id}] recebe um pacote do Hospedeiro[{package.origin}]\n"
+                    + f"        message is: {package.content}."
                 )
 
         elif package.next != None and self.host.node.id == package.next.node.id:
             log(
-                f"NETWORK: Host[{self.host.node.id}] receive package DATA, But I am not the Receiver"
+                f"     Rede: Hospedeiro[{self.host.node.id}] recebe um pacote DATA, mas eu não sou destinatário"
             )
             if self.add_received_package(package.id):
                 package.next = self.get_next_jump(package.path)
                 log(
-                    f"NETWORK: Send DATA to the next Host[{package.next.node.id}]"
+                    f"     Rede: Estou enviando DATA para próximo Hospedeiro[{package.next.node.id}]"
                 )
 
                 self.host.link.sending_request(package)
@@ -128,10 +127,10 @@ class Network:
                     self.package_id.get(), "RREP", "", self.host.node.id, package.origin
                 )
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] Receive a package RREQ, it's Receiver"
+                    f"     Rede: Hospedeiro[{self.host.node.id}] recebeu um pacote RREQ, que é o destinatário"
                 )
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] Sending a package RREP to Host[{package.origin}]"
+                    f"     Rede: Hospedeiro[{self.host.node.id}] está enviando um pacote RREP para Hospedeiro[{package.origin}]"
                 )
 
                 self.package_id.add()
@@ -145,13 +144,13 @@ class Network:
         else:
             if self.add_received_package(package.id):
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] receive RREQ, but I am not the  Host destiny"
+                    f"     Rede: Hospedeiro[{self.host.node.id}] Recebi um pacote RREQ, mas não sou o Hospedeiro de destino"
                 )
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] sending a pakage  broadcast RREQ"
+                    f"     Rede: Hospedeiro[{self.host.node.id}] está enviando um pacote RREQ em broadcast"
                 )
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] adding a path"
+                    f"     Rede: Hospedeiro[{self.host.node.id}] está se adicionando a um path"
                 )
 
                 package.path.append(self.host)
@@ -162,10 +161,10 @@ class Network:
         if self.host.node.id == package.destiny:
             if self.add_received_package(package.id):
                 log(
-                    f"NETWORK: Host[{self.host.node.id}] receive a pakage RREP of Host[{package.origin}]"
+                    f"     Rede: Hospedeirot[{self.host.node.id}] recebeu um pacote RREP do Hospedeiro[{package.origin}]"
                 )
                 log(
-                    f"NETWORK: , e estou enviando pacote de dados para Hospedeiro[{package.origin}]"
+                    f"     Rede: Eu sou a origem, e estou enviando pacote de dados para Hospedeiro[{package.origin}]"
                 )
 
                 data_package = self.pending_packages.pop(0)

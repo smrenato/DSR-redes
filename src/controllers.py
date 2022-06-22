@@ -11,15 +11,16 @@ def log(message: str):
     print(message)
 
 
-class Package_ID_Counter: 
-  def __init__(self):
-      self.package_id = 0
-  
-  def add(self):
-    self.package_id += 1
-  
-  def get(self):
-    return self.package_id
+class Package_ID_Counter:
+    def __init__(self):
+        self.package_id = 0
+
+    def add(self):
+        self.package_id += 1
+
+    def get(self):
+        return self.package_id
+
 
 class Message:
     def __init__(self, message: str, origin: int, destiny: int):
@@ -39,18 +40,18 @@ class RequestController:
             self.remetente_permitido = self.envia_fila.pop(0)
 
             log(
-                f"HOST CONTROLLER: HOST[{self.remetente_permitido.node.id}] : Allow -> permission to send"
+                f"     Controlador de Requisições: Hospedeiro[{self.remetente_permitido.node.id}] tem permissão para começar a enviar"
             )
 
             self.remetente_permitido.link.send_package_to_physical()
         else:
             log(
-                f"HOST CONTROLLER: Does't have Host in the Queue!\n"
+                f"  Controlador de Requisições: não há Hospedeiros na fila para enviar\n"
             )
 
     def add_queue(self, host):
         log(
-            f"HOST CONTROLLER: HOST[{host.node.id}] Waiting the permission to send.\n"
+            f"     Controlador de Requisições: o Hospedeiro[{host.node.id}] deseja enviar um pacote e espera a permissão.\n"
         )
         self.envia_fila.append(host)
 
@@ -74,7 +75,7 @@ class Link:
     def sending_request(self, package):
         self.pending_package.append(package)
         log(
-            f"ENLANCE LAYER: Sending a package of HOST to controller who request [{self.host.node.id}]"
+            f"     Camada de Enlace: Enviando pacote do Hospedeiro para o controlador de solicitação[{self.host.node.id}]"
         )
         self.host.requestController.add_queue(self.host)
 
@@ -84,7 +85,7 @@ class Link:
 
     def receive_package_to_physical(self, package):
         log(
-            f"ENLANCE LAYER: Received the |{package.type}|of physical layer and redirecting to Network layer"
+            f"     Camada de Enlace: Recebe o pacote |{package.type}| da Camada Física e envie para a Camada de Rede"
         )
         self.host.network.receive_package(package)
 

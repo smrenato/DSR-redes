@@ -17,10 +17,11 @@ from src.physical_layer import Host, Package_ID_Counter
 
 def main() -> None :
 
-    payload = readDataFile("nodes.json")
+    payload = readDataFile("nodes.txt")
     nodes = payload[1]
     hosts = []
    
+    master = RequestController()
 
     # Cria os roteadores
     package_ID_Counter = Package_ID_Counter()
@@ -64,5 +65,5 @@ def main() -> None :
 if __name__ == "__main__":
 
     logging.basicConfig(filename="logs.log", level=logging.INFO)
-    master = RequestController()
+    
     main()
